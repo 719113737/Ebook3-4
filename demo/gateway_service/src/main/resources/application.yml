@@ -14,18 +14,18 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
-        - id: PRODUCT-SERVICE
-          uri: lb://PRODUCT-SERVICE
+        - id: COLLECT-SERVICE
+          uri: lb://COLLECT-SERVICE
           predicates:
-            - Path=/api/product/**
+            - Path=/collect/**
         - id: USER-SERVICE
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/api/user/**
-        - id: SHOPPING-CART-SERVICE
-          uri: lb://SHOPPING-CART-SERVICE
+            - Path=/user/**
+        - id: BOOK-SERVICE
+          uri: lb://BOOK-SERVICE
           predicates:
-            - Path=/api/cart/**
+            - Path=/book/**
 
   security:
     oauth2:
@@ -37,7 +37,7 @@ spring:
           spring-gateway:
             authorization-grant-type: authorization_code
             client-id: spring-gateway
-            client-secret: 8baaec35-2fae-42ff-a0d2-335aefdf6c5a
+            client-secret: 15df18be-9218-429c-9821-60961e3a305a
             provider: keycloak
             redirect-uri: http://localhost:8080/login/oauth2/code/spring-gateway
       resourceserver:
