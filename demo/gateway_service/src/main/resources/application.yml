@@ -25,7 +25,7 @@ spring:
         - id: BOOK-SERVICE
           uri: lb://BOOK-SERVICE
           predicates:
-            - Path=/book/**
+            - Path=/books/**
 
   security:
     oauth2:

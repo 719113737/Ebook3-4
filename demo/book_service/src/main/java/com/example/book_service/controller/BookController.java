@@ -5,10 +5,7 @@ import com.example.book_service.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +22,8 @@ public class BookController {
      * 获得书列表
      */
     @Operation(description = "获得书籍列表")
-    @RequestMapping(path = "/books", method = RequestMethod.GET)
+    //@RequestMapping(path = "/books", method = RequestMethod.GET)
+    @GetMapping("/books")
     public Map getBooks() {
         List<Book> books = bookService.findAllBooks();
         Map<String, Object> result = new HashMap<>();
