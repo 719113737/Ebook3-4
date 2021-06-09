@@ -9,3 +9,7 @@ eureka:
 server:
   port: 8761
 
+spring:
+  cloud:
+    compatibility-verifier:
+      enabled: false
