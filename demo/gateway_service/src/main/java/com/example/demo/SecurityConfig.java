@@ -28,6 +28,8 @@ public class SecurityConfig {
                                  "/v3/api-docs/**",
                                  "/swagger-ui.html",
                                  "/swagger-ui/**",
+                                 "/timeout",
+                                 "/defaultfallback",
                                  "/").permitAll().anyExchange().authenticated())
             .oauth2Login(Customizer.withDefaults());
 //        http.authorizeExchange().anyExchange().permitAll();

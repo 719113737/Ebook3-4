@@ -1,22 +1,32 @@
 package com.example.demo.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 public class DefaultHystrixController {
 
-    @RequestMapping("/defaultfallback")
-    public Map<String,String> defaultfallback(){
+  //  @RequestMapping("/defaultfallback")
+    public String defaultfallback(){
         System.out.println("降级");
 
-        Map<String,String> map =  new HashMap<>();
-        map.put("code","fail");
-        map.put("msg","服务异常");
+        return "{code:200,msg:\"服务异常\"}";
+    }
 
-        return map;
+    /**
+     * 超时测试
+     * @return
+     */
+    @HystrixCommand(fallbackMethod = "defaultfallback")
+    @RequestMapping("/timeout")
+    public String timeout() {
+        try{
+            Thread.sleep(10000);
+            throw new Exception();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "timeout";
     }
 }

@@ -7,6 +7,10 @@ spring:
     gateway:
       default-filters:
         - TokenRelay=
+        - name: Hystrix
+          args:
+            name: fallbackcmd
+            fallbackUri: forward:/defaultfallback
       metrics:
         enabled: true
       discovery:
@@ -58,4 +62,16 @@ eureka:
     hostname: localhost
     prefer-ip-address: true
 
-
+hystrix:
+  command:
+    fallbackcmd:
+      metrics:
+        rollingStates:
+          timeInMilliseconds: 1000
+      execution:
+        isolation:
+          strategy: THREAD
+          thread:
+            timeoutInMilliseconds: 3000
+        timeout:
+          enabled: true
