@@ -30,7 +30,8 @@ public class SecurityConfig {
                                  "/swagger-ui/**",
                                  "/timeout",
                                  "/defaultfallback",
-                                 "/").permitAll().anyExchange().authenticated())
+                                 "/").permitAll().anyExchange().authenticated()
+                .and().headers().frameOptions().disable())
             .oauth2Login(Customizer.withDefaults());
 //        http.authorizeExchange().anyExchange().permitAll();
         http.csrf().disable();

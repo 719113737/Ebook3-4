@@ -39,12 +39,12 @@ spring:
           keycloak:
             issuer-uri: http://localhost:8180/auth/realms/product_service
         registration:
-          spring-gateway:
-            authorization-grant-type: authorization_code
-            client-id: spring-gateway
-            client-secret: 15df18be-9218-429c-9821-60961e3a305a
+          vue-front:
+#            authorization-grant-type: authorization_code
+            client-id: vue-front
+#            client-secret: e759a3e9-d81e-4145-bd98-5d74776b1f78
             provider: keycloak
-            redirect-uri: http://localhost:8080/login/oauth2/code/spring-gateway
+            redirect-uri: http://localhost:8080/login/oauth2/code/vue-front
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8180/auth/realms/product_service/protocol/openid-connect/certs

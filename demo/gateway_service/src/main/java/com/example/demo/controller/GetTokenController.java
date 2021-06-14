@@ -7,21 +7,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+//
+//@RestController
+//public class GetTokenController {
+//
+//    //todo 登录先访问该接口
+//    //todo 带上返回的token访问 http://localhost:8180/auth/realms/product_service/protocol/openid-connect/userinfo
+//    //todo 从而获得preferred_username作为该用户id
+//    @GetMapping("/greeting")
+//    public Map greeting(@RegisteredOAuth2AuthorizedClient("vue-front") OAuth2AuthorizedClient client) {
+//        Map<String, String> result = new HashMap<>();
+//        //result.put("username", oidcUser.getName());
+//        result.put("accessToken",client.getAccessToken().getTokenValue());
+//
+//        return result;
+//    }
 
-@RestController
-public class GetTokenController {
 
-    //todo 登录先访问该接口
-    //todo 带上返回的token访问 http://localhost:8180/auth/realms/product_service/protocol/openid-connect/userinfo
-    //todo 从而获得preferred_username作为该用户id
-    @GetMapping("/greeting")
-    public Map greeting(@RegisteredOAuth2AuthorizedClient("spring-gateway") OAuth2AuthorizedClient client) {
-        Map<String, String> result = new HashMap<>();
-        //result.put("username", oidcUser.getName());
-        result.put("accessToken",client.getAccessToken().getTokenValue());
-
-        return result;
-    }
-
-
-}
+//}
