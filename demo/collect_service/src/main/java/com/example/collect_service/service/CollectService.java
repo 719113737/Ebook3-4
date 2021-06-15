@@ -1,13 +1,17 @@
 package com.example.collect_service.service;
 
+
 import com.example.collect_service.dao.CollectionInfo;
 import com.example.collect_service.entity.Collection;
+import com.example.collect_service.mapper.BookFeignClient;
 import com.example.collect_service.mapper.CollectionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CollectService {
@@ -15,6 +19,8 @@ public class CollectService {
     @Autowired
     CollectionMapper collectionMapper;
 
+    @Autowired
+    BookFeignClient bookFeignClient;
     /**
      * 添加收藏夹信息
      *
@@ -32,7 +38,20 @@ public class CollectService {
      * @return
      */
     public List<CollectionInfo> getCollectionByUsername(String username) {
-        return collectionMapper.getCollectionByUsername(username);
+        List<Collection> collectionList =  collectionMapper.getCollectionByUsername(username);
+        List<CollectionInfo> result = new ArrayList<>();
+        collectionList.forEach(collection -> {
+            CollectionInfo collectionInfo = new CollectionInfo();
+            collectionInfo.setUsername(collection.getUsername());
+            String title = collection.getTitle();
+            collectionInfo.setTitle(title);
+
+            Map data = (Map) bookFeignClient.findById(title).get("data");
+            String imagePath = (String) data.get("imagePath");
+            collectionInfo.setImagePath(imagePath);
+            result.add(collectionInfo);
+        });
+        return result;
     }
 
     /**
@@ -46,10 +65,10 @@ public class CollectService {
     }
 
     public boolean isCollect(String username, String title) {
-        List<CollectionInfo> collections = collectionMapper.getCollectionByUsername(username);
-        Iterator<CollectionInfo> collectionInfoIterator = collections.iterator();
+        List<Collection> collections = collectionMapper.getCollectionByUsername(username);
+        Iterator<Collection> collectionInfoIterator = collections.iterator();
         while (collectionInfoIterator.hasNext()) {
-            CollectionInfo tmp = collectionInfoIterator.next();
+            Collection tmp = collectionInfoIterator.next();
             if (tmp.getTitle().equals(title)) return true;
         }
         return false;

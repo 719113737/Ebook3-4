@@ -1,6 +1,5 @@
 package com.example.collect_service.mapper;
 
-import com.example.collect_service.dao.CollectionInfo;
 import com.example.collect_service.entity.Collection;
 import org.apache.ibatis.annotations.*;
 
@@ -22,10 +21,9 @@ public interface CollectionMapper {
      * @param username 用户名
      * @return
      */
-    @Select("select collection.username,collection.title,imagePath from collection " +
-            "left join book on book.title = collection.title " +
+    @Select("select collection.username,collection.title from collection " +
             "where collection.username = #{username};")
-    List<CollectionInfo> getCollectionByUsername(@Param("username")String username);
+    List<Collection> getCollectionByUsername(@Param("username")String username);
 
 
     /**
