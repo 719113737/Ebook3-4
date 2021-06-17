@@ -2,10 +2,10 @@ package com.example.collect_service.service;
 
 
 import com.example.collect_service.dao.CollectionInfo;
-import com.example.book_service.entity.Book;
 import com.example.collect_service.entity.Collection;
 import com.example.collect_service.mapper.BookFeignClient;
 import com.example.collect_service.mapper.CollectionMapper;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -79,9 +79,9 @@ public class CollectService {
     }
 
     @KafkaListener(topics = "${spring.kafka.topics.collect}",groupId = "${spring.kafka.consumer.group-id}",containerFactory = "kafkaListenerContainerFactory")
-    public void recieveData(Book book) {
-        if (!bookImagePath.containsKey(book.getTitle())) {
-            bookImagePath.put(book.getTitle(),book.getImagePath());
+    public void recieveData(JSONObject jsonObject) {
+        if (!bookImagePath.containsKey(jsonObject.get("title"))) {
+            bookImagePath.put(jsonObject.getAsString("title"),jsonObject.getAsString("imagePath"));
         }
     }
 

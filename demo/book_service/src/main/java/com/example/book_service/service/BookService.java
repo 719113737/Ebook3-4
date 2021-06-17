@@ -2,6 +2,7 @@ package com.example.book_service.service;
 
 import com.example.book_service.entity.Book;
 import com.example.book_service.mapper.BookMapper;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -19,7 +20,7 @@ public class BookService {
     BookMapper bookMapper;
 
     @Autowired
-    KafkaTemplate<String,Book> kafkaTemplate;
+    KafkaTemplate<String, JSONObject> kafkaTemplate;
 
     public List<Book> findAllBooks() {
         return bookMapper.findAllBooks();
@@ -52,7 +53,12 @@ public class BookService {
      */
     public void submitBooks(Book book) {
         System.out.println(book.getTitle() + "is sent to the message queue" );
-        kafkaTemplate.send(topicName,book);
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("title",book.getTitle());
+        jsonObject.put("imagePath",book.getImagePath());
+
+        kafkaTemplate.send(topicName,jsonObject);
         System.out.println("send successfully");
     }
 }

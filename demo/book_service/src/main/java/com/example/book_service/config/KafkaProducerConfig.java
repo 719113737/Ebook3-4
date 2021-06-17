@@ -1,6 +1,6 @@
 package com.example.book_service.config;
 
-import com.example.book_service.entity.Book;
+import net.minidev.json.JSONObject;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,7 @@ public class KafkaProducerConfig {
     private String kafkaServer;
 
     @Bean
-    public ProducerFactory<String, Book> producerConfig() {
+    public ProducerFactory<String, JSONObject> producerConfig() {
         Map<String,Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -31,5 +31,5 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String,Book> kafkaTemplate(){return new KafkaTemplate<>(producerConfig());}
+    public KafkaTemplate<String,JSONObject> kafkaTemplate(){return new KafkaTemplate<>(producerConfig());}
 }

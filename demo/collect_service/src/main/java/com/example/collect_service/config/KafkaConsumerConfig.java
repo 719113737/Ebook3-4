@@ -1,6 +1,6 @@
 package com.example.collect_service.config;
 
-import com.example.book_service.entity.Book;
+import net.minidev.json.JSONObject;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,7 @@ public class KafkaConsumerConfig {
     private String kafkaGroupId;
 
     @Bean
-    public ConsumerFactory<String, Book> consumerConfig() {
+    public ConsumerFactory<String, JSONObject> consumerConfig() {
         // TODO Auto-generated method stub
         Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);
@@ -39,12 +39,12 @@ public class KafkaConsumerConfig {
 
 //        JsonDeserializer<? extends Object> jsonDeserializer = new JsonDeserializer<>(Book.class);
 //        jsonDeserializer.addTrustedPackages("com.example.book_service.entity");
-        return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(Book.class));
+        return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(JSONObject.class));
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Book>> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Book> listener = new ConcurrentKafkaListenerContainerFactory<>();
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, JSONObject>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, JSONObject> listener = new ConcurrentKafkaListenerContainerFactory<>();
         listener.setConsumerFactory(consumerConfig());
         return listener;
     }
