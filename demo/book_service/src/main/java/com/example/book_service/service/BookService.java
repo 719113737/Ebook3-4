@@ -3,6 +3,8 @@ package com.example.book_service.service;
 import com.example.book_service.entity.Book;
 import com.example.book_service.mapper.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,8 +12,14 @@ import java.util.List;
 @Service
 public class BookService {
 
+    @Value("${spring.kafka.topics.collect}")
+    private String topicName;
+
     @Autowired
     BookMapper bookMapper;
+
+    @Autowired
+    KafkaTemplate<String,Book> kafkaTemplate;
 
     public List<Book> findAllBooks() {
         return bookMapper.findAllBooks();
@@ -39,4 +47,12 @@ public class BookService {
         return book.getFilePath();
     }
 
+    /**
+     * 提交所有书到kafka
+     */
+    public void submitBooks(Book book) {
+        System.out.println(book.getTitle() + "is sent to the message queue" );
+        kafkaTemplate.send(topicName,book);
+        System.out.println("send successfully");
+    }
 }

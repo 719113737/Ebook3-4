@@ -2,16 +2,15 @@ package com.example.collect_service.service;
 
 
 import com.example.collect_service.dao.CollectionInfo;
+import com.example.book_service.entity.Book;
 import com.example.collect_service.entity.Collection;
 import com.example.collect_service.mapper.BookFeignClient;
 import com.example.collect_service.mapper.CollectionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CollectService {
@@ -21,6 +20,9 @@ public class CollectService {
 
     @Autowired
     BookFeignClient bookFeignClient;
+
+    private Map<String,String> bookImagePath = new HashMap<>();
+
     /**
      * 添加收藏夹信息
      *
@@ -40,15 +42,17 @@ public class CollectService {
     public List<CollectionInfo> getCollectionByUsername(String username) {
         List<Collection> collectionList =  collectionMapper.getCollectionByUsername(username);
         List<CollectionInfo> result = new ArrayList<>();
+        Map<String,String> tmp = getBooklist();
         collectionList.forEach(collection -> {
             CollectionInfo collectionInfo = new CollectionInfo();
             collectionInfo.setUsername(collection.getUsername());
             String title = collection.getTitle();
             collectionInfo.setTitle(title);
 
-            Map data = (Map) bookFeignClient.findById(title).get("data");
-            String imagePath = (String) data.get("imagePath");
-            collectionInfo.setImagePath(imagePath);
+//            Map data = (Map) bookFeignClient.findById(title).get("data");
+//            String imagePath = (String) data.get("imagePath");
+            if(tmp.containsKey(title))collectionInfo.setImagePath(tmp.get(title));
+
             result.add(collectionInfo);
         });
         return result;
@@ -72,5 +76,16 @@ public class CollectService {
             if (tmp.getTitle().equals(title)) return true;
         }
         return false;
+    }
+
+    @KafkaListener(topics = "${spring.kafka.topics.collect}",groupId = "${spring.kafka.consumer.group-id}",containerFactory = "kafkaListenerContainerFactory")
+    public void recieveData(Book book) {
+        if (!bookImagePath.containsKey(book.getTitle())) {
+            bookImagePath.put(book.getTitle(),book.getImagePath());
+        }
+    }
+
+    public Map<String, String> getBooklist() {
+        return this.bookImagePath;
     }
 }

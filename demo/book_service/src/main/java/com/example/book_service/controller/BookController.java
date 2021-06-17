@@ -4,6 +4,7 @@ import com.example.book_service.entity.Book;
 import com.example.book_service.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@AllArgsConstructor
 @Tag(name = "书本操作模块")
 public class BookController {
     @Autowired
     BookService bookService;
-
 
     /**
      * 获得书列表
@@ -26,6 +27,10 @@ public class BookController {
     @GetMapping("/books")
     public Map getBooks() {
         List<Book> books = bookService.findAllBooks();
+        books.forEach(book -> {
+            //提交所有的书到kafka
+            bookService.submitBooks(book);
+        });
         Map<String, Object> result = new HashMap<>();
         result.put("msg", "");
         result.put("code", 200);

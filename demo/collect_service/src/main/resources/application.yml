@@ -11,6 +11,20 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      bootstrap-servers: 127.0.0.1:9092
+      group-id: group-id
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+    topics:
+      collect: collectTopic
 
 server:
   port: 8086
