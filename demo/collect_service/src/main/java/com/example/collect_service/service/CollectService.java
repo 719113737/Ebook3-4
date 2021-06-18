@@ -81,6 +81,7 @@ public class CollectService {
     @KafkaListener(topics = "${spring.kafka.topics.collect}",groupId = "${spring.kafka.consumer.group-id}",containerFactory = "kafkaListenerContainerFactory")
     public void recieveData(JSONObject jsonObject) {
         if (!bookImagePath.containsKey(jsonObject.get("title"))) {
+            System.out.println("get book: " + jsonObject.getAsString("title"));
             bookImagePath.put(jsonObject.getAsString("title"),jsonObject.getAsString("imagePath"));
         }
     }
