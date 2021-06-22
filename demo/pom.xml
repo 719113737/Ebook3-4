@@ -12,7 +12,6 @@
     <modules>
         <module>registry_service</module>
         <module>gateway_service</module>
-        <module>user_service</module>
         <module>book_service</module>
         <module>collect_service</module>
     </modules>
