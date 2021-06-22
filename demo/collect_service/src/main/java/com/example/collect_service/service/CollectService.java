@@ -5,13 +5,13 @@ import com.example.collect_service.dao.CollectionInfo;
 import com.example.collect_service.entity.Collection;
 import com.example.collect_service.mapper.BookFeignClient;
 import com.example.collect_service.mapper.CollectionMapper;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class CollectService {
@@ -37,6 +37,7 @@ public class CollectService {
      * @param username
      * @return
      */
+    @HystrixCommand(fallbackMethod = "collectionFallback")
     public List<CollectionInfo> getCollectionByUsername(String username) {
         List<Collection> collectionList =  collectionMapper.getCollectionByUsername(username);
         List<CollectionInfo> result = new ArrayList<>();
@@ -52,6 +53,11 @@ public class CollectService {
             result.add(collectionInfo);
         });
         return result;
+    }
+
+    public List<CollectionInfo> collectionFallback(String username){
+        Logger.getLogger("e-book").log(Level.WARNING, "book server connect failed");
+        return null;
     }
 
     /**

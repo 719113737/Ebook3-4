@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 public class DefaultHystrixController {
@@ -27,6 +29,6 @@ public class DefaultHystrixController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "timeout";
+        return "return after timeout";
     }
 }

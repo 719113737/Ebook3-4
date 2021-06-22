@@ -40,9 +40,7 @@ spring:
             issuer-uri: http://localhost:8180/auth/realms/product_service
         registration:
           vue-front:
-#            authorization-grant-type: authorization_code
             client-id: vue-front
-#            client-secret: e759a3e9-d81e-4145-bd98-5d74776b1f78
             provider: keycloak
             redirect-uri: http://localhost:8080/login/oauth2/code/vue-front
       resourceserver:

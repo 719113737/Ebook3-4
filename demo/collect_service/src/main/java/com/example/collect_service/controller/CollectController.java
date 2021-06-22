@@ -5,6 +5,7 @@ import com.example.collect_service.service.CollectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,9 +32,14 @@ public class CollectController {
     public Map getCollectionByUsername(@PathVariable("username") String username) {
         Map<String, Object> result = new HashMap<>();
         List<CollectionInfo> collections = collectService.getCollectionByUsername(username);
-        result.put("msg", "");
-        result.put("code", 200);
-        result.put("data", collections);
+        if (collections == null) {
+            result.put("msg", "book service not available");
+            result.put("code", 500);
+        }else{
+            result.put("msg", "");
+            result.put("code", 200);
+            result.put("data", collections);
+        }
 
         return result;
     }
