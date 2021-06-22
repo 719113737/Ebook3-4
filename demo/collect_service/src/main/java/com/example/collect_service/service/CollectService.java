@@ -5,12 +5,15 @@ import com.example.collect_service.dao.CollectionInfo;
 import com.example.collect_service.entity.Collection;
 import com.example.collect_service.mapper.BookFeignClient;
 import com.example.collect_service.mapper.CollectionMapper;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class CollectService {
@@ -39,10 +42,11 @@ public class CollectService {
      * @param username
      * @return
      */
+    @HystrixCommand(fallbackMethod = "collectionFallback")
     public List<CollectionInfo> getCollectionByUsername(String username) {
         List<Collection> collectionList =  collectionMapper.getCollectionByUsername(username);
         List<CollectionInfo> result = new ArrayList<>();
-        Map<String,String> tmp = getBooklist();
+        Map<String,String> tmp = getBookList();
         collectionList.forEach(collection -> {
             CollectionInfo collectionInfo = new CollectionInfo();
             collectionInfo.setUsername(collection.getUsername());
@@ -56,6 +60,11 @@ public class CollectService {
             result.add(collectionInfo);
         });
         return result;
+    }
+
+    public List<CollectionInfo> collectionFallback(String username){
+        Logger.getLogger("e-book").log(Level.WARNING, "book server connect failed");
+        return null;
     }
 
     /**
@@ -79,14 +88,14 @@ public class CollectService {
     }
 
     @KafkaListener(topics = "${spring.kafka.topics.collect}",groupId = "${spring.kafka.consumer.group-id}",containerFactory = "kafkaListenerContainerFactory")
-    public void recieveData(JSONObject jsonObject) {
+    public void receiveData(JSONObject jsonObject) {
         if (!bookImagePath.containsKey(jsonObject.get("title"))) {
             System.out.println("get book: " + jsonObject.getAsString("title"));
             bookImagePath.put(jsonObject.getAsString("title"),jsonObject.getAsString("imagePath"));
         }
     }
 
-    public Map<String, String> getBooklist() {
+    public Map<String, String> getBookList() {
         return this.bookImagePath;
     }
 }

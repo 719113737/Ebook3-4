@@ -34,11 +34,6 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaGroupId);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        //config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-//        config.put(JsonDeserializer.TRUSTED_PACKAGES, "com.example.book_service.entity");
-
-//        JsonDeserializer<? extends Object> jsonDeserializer = new JsonDeserializer<>(Book.class);
-//        jsonDeserializer.addTrustedPackages("com.example.book_service.entity");
         return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(JSONObject.class));
     }
 
